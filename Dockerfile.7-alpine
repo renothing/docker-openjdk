@@ -1,0 +1,12 @@
+FROM openjdk:7-jre-alpine
+LABEL role='openjdk' version='7' tags='jre7' description='openjdk jre7 based on alpine'
+#set enviroments
+ENV TIMEZONE="Asia/Shanghai"
+#install software
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && \
+#RUN apk update && \
+  apk add tzdata && \
+  cp -rf /usr/share/zoneinfo/"${TIMEZONE}" /etc/localtime && \
+  echo "${TIMEZONE}" > /etc/timezone && \
+  apk del tzdata && \
+  rm -rf /var/cache/apk/* && \      
