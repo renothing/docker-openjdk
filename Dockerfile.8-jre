@@ -4,4 +4,4 @@ LABEL role='openjdk' version='8' tags='jre8' description='openjdk jre8 based on 
 ENV TIMEZONE="Asia/Shanghai"
 #install software
 RUN cp -rf /usr/share/zoneinfo/"${TIMEZONE}" /etc/localtime && \
-  echo "$TIMEZONE" > /etc/timezone
+    echo "$TIMEZONE" > /etc/timezone
