@@ -1,0 +1,42 @@
+#global docker info
+dockerpub: &dockerinfo
+   image: plugins/docker
+   volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+   force_tag: true
+   mirror: "https://docker.mirrors.ustc.edu.cn"
+   registry: ${ALI_DOCKER_URL}
+   username: ${ALI_DOCKER_USER}
+   password: ${ALI_DOCKER_PASS}
+   email: ${ALI_DOCKER_USER}
+   repo: "${ALI_DOCKER_URL}/winshare/openjdk"
+docker: &docker
+   <<: *dockerinfo
+   when:
+     event: [push,tag]
+     branch: [master,refs/tags/*]
+pipeline:
+  clone:
+    image: plugins/git
+    recursive: true
+    tags: true
+  openjdk7-jre:
+    <<: *docker
+    tags:
+      - 7-jre
+    dockerfile: Dockerfile.7-jre
+  openjdk-jre-alpine:
+    <<: *docker
+    tags: 7-jre-alpine
+    dockerfile: Dockerfile.7-jre-alpine
+  openjdk8-jre:
+    <<: *docker
+    tags:
+      - 8-jre
+      - ${DRONE_TAG=latest}
+      - latest
+    dockerfile: Dockerfile.8-jre
+  openjdk8-jre-alpine:
+    <<: *docker
+    tags: 8-jre-alpine
+    dockerfile: Dockerfile.8-jre-alpine
